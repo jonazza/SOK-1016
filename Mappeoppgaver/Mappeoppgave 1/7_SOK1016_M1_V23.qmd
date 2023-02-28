@@ -1,0 +1,445 @@
+---
+title: SOK-1016, vår 2023, Mappeoppgave 1
+author: Kandidatnummer 7 & 33
+format: pdf
+echo: true
+output: true
+editor: visual
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#rydder opp fra tidligere
+rm(list=ls()) 
+
+#pakker
+library(tidyverse) #datamanioulering og ggplot
+library(ggthemes) #tema ggplot
+library(ggpubr) #ggplot ekstra
+library(janitor) #pakke for å hjelpe med dataset
+library(httr) #pakke til innlasting av api data fra ssb
+library(rjstat) #pakke til lesing av json
+library(wesanderson) #farger til plot
+
+#lenke til data ssb (bruttoprodukt)
+url_bruttoprodukt <- "https://data.ssb.no/api/v0/no/table/09171/"
+#(Statistisk sentralbyrå, 2022)
+
+#lenke til data ssb (sysselsatte)
+url_sysselsatte <- "https://data.ssb.no/api/v0/no/table/09175/"
+#(Statistisk sentralbyrå, 2022)
+
+#lenke til data ssb (bruttoprodukt 11-21)
+url_11_21 <- "https://data.ssb.no/api/v0/no/table/09170/"
+#(Statistisk sentralbyrå, 2022)
+```
+
+## Oppgave 1
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#Kodeblokken inneholder bare query og hent_indeks, samt seperering av kolonnen med kvartal
+
+#query bruttoprodukt
+query_bruttoprodukt <- '{
+  "query": [
+    {
+      "code": "NACE",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "nr23_6",
+          "pub2X01_02",
+          "pub2X03",
+          "pub2X05",
+          "nr2X06_09",
+          "nr23ind",
+          "pub2X35",
+          "pub2X36_39",
+          "pub2X41_43",
+          "pub2X45_47",
+          "pub2X49B",
+          "pub2X50A",
+          "pub2X49A_52",
+          "pub2X53",
+          "pub2X55_56",
+          "pub2X58_63",
+          "pub2X64_66",
+          "pub2X68A",
+          "pub2X68B",
+          "pub2X69_75",
+          "pub2X77_82",
+          "pub2X84",
+          "pub2X85",
+          "pub2X86_88",
+          "pub2X90_97",
+          "nr23_6fn"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Prob",
+          "BNPB"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2021K1",
+          "2021K2",
+          "2021K3",
+          "2021K4"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+#auery sysselsatte
+query_sysselsatte <- '{
+  "query": [
+    {
+      "code": "NACE",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "nr23_6",
+          "pub2X01_02",
+          "pub2X03",
+          "pub2X05",
+          "nr2X06_09",
+          "nr23ind",
+          "pub2X35",
+          "pub2X36_39",
+          "pub2X41_43",
+          "pub2X45_47",
+          "pub2X49B",
+          "pub2X50A",
+          "pub2X49A_52",
+          "pub2X53",
+          "pub2X55_56",
+          "pub2X58_63",
+          "pub2X64_66",
+          "pub2X68A",
+          "pub2X68B",
+          "pub2X69_75",
+          "pub2X77_82",
+          "pub2X84",
+          "pub2X85",
+          "pub2X86_88",
+          "pub2X90_97",
+          "nr23_6fn"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Sysselsatte",
+          "SysselsattNorm",
+          "Timeverk"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2021K1",
+          "2021K2",
+          "2021K3",
+          "2021K4"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks_bruttoprodukt.tmp <- url_bruttoprodukt %>%
+  POST(body = query_bruttoprodukt, encode = "json")
+
+hent_indeks_sysselsatte.tmp <- url_sysselsatte %>%
+  POST(body = query_sysselsatte, encode = "json")
+
+bruttoprodukt <-  hent_indeks_bruttoprodukt.tmp %>% #lager datasett
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble() %>% #tibble
+  separate(kvartal, 
+         into=c("år", "kvartal"), 
+         sep="K") #sepererer kvartal til år og kvartal som seperate kolonner
+
+sysselsatte <-  hent_indeks_sysselsatte.tmp %>% #lager datasett
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble() %>% #tibble
+  separate(kvartal, 
+         into=c("år", "kvartal"), 
+         sep="K") #sepererer kvartal til år og kvartal som seperate kolonner
+
+bruttoprodukt <- bruttoprodukt %>%
+  group_by(næring, statistikkvariabel) %>% #samler utifra næringer og statistikkvar.
+  summarise(sum=sum(value)) %>% #summerer
+  pivot_wider(names_from = næring, values_from = sum) #wider
+
+bruttoprodukt <- bruttoprodukt %>% #legger sammen enkelte næringer og velger de ønskede kolonnene
+  mutate("Industri og bergverksdrift" = Bergverksdrift + Industri) %>%
+  mutate("Primærnæringer" = !!sym("Fiske, fangst og akvakultur") + !!sym("Jordbruk og skogbruk")) %>%
+  mutate("Tjenester ellers" = !!sym("Informasjon og kommunikasjon") + !!sym("Kultur, underholdning og annen tjenesteyting")) %>%
+  mutate("Undervisning" = Undervisning + !!sym("Faglig, vitenskapelig og teknisk tjenesteyting")) %>%
+  mutate("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift" = !!sym("Elektrisitets-, gass- og varmtvannsforsyning") + !!sym("Vannforsyning, avløp og renovasjon") + !!sym("Finansierings- og forsikringsvirksomhet") + !!sym("Omsetning og drift av fast eiendom") + !!sym("Boligtjenester, egen bolig") + !!sym("Forretningsmessig tjenesteyting")) %>%
+  mutate("Samferdsel" = Rørtransport + !!sym("Utenriks sjøfart") + !!sym("Transport utenom utenriks sjøfart") + !!sym("Post og distribusjonsvirksomhet")) %>%
+  mutate("Varehandel, hotell- og restaurantvirksomhet" = !!sym("Overnattings- og serveringsvirksomhet") + !!sym("Varehandel og reparasjon av motorvogner")) %>%
+  select(!!sym("Utvinning av råolje og naturgass, inkl. tjenester"), !!sym("Industri og bergverksdrift"), !!sym("Primærnæringer"), !!sym("Tjenester ellers"), !!sym("Helse- og omsorgstjenester"), Undervisning, !!sym("Offentlig administrasjon og forsvar"), !!sym("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift"), Samferdsel, !!sym("Varehandel, hotell- og restaurantvirksomhet"), !!sym("Bygge- og anleggsvirksomhet"), statistikkvariabel, !!sym("Totalt for næringer"), !!sym("Fastlands-Norge"))
+
+sysselsatte <- sysselsatte %>%
+  group_by(næring, statistikkvariabel) %>% #samler utifra næringer og statistikkvar.
+  summarise(sum=mean(value)) %>% #summerer
+  pivot_wider(names_from = næring, values_from = sum) #wider
+
+sysselsatte <- sysselsatte %>% #legger sammen enkelte næringer og velger de ønskede kolonnene
+  mutate("Industri og bergverksdrift" = Bergverksdrift + Industri) %>%
+  mutate("Primærnæringer" = !!sym("Fiske, fangst og akvakultur") + !!sym("Jordbruk og skogbruk")) %>%
+  mutate("Tjenester ellers" = !!sym("Informasjon og kommunikasjon") + !!sym("Kultur, underholdning og annen tjenesteyting")) %>%
+  mutate("Undervisning" = Undervisning + !!sym("Faglig, vitenskapelig og teknisk tjenesteyting")) %>%
+  mutate("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift" = !!sym("Elektrisitets-, gass- og varmtvannsforsyning") + !!sym("Vannforsyning, avløp og renovasjon") + !!sym("Finansierings- og forsikringsvirksomhet") + !!sym("Omsetning og drift av fast eiendom") + !!sym("Boligtjenester, egen bolig") + !!sym("Forretningsmessig tjenesteyting")) %>%
+  mutate("Samferdsel" = Rørtransport + !!sym("Utenriks sjøfart") + !!sym("Transport utenom utenriks sjøfart") + !!sym("Post og distribusjonsvirksomhet")) %>%
+  mutate("Varehandel, hotell- og restaurantvirksomhet" = !!sym("Overnattings- og serveringsvirksomhet") + !!sym("Varehandel og reparasjon av motorvogner")) %>%
+  select(!!sym("Utvinning av råolje og naturgass, inkl. tjenester"), !!sym("Industri og bergverksdrift"), !!sym("Primærnæringer"), !!sym("Tjenester ellers"), !!sym("Helse- og omsorgstjenester"), Undervisning, !!sym("Offentlig administrasjon og forsvar"), !!sym("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift"), Samferdsel, !!sym("Varehandel, hotell- og restaurantvirksomhet"), !!sym("Bygge- og anleggsvirksomhet"), statistikkvariabel, !!sym("Totalt for næringer"), !!sym("Fastlands-Norge"))
+
+df21 <- rbind(bruttoprodukt, sysselsatte) %>% 
+  pivot_longer(c(!!sym("Utvinning av råolje og naturgass, inkl. tjenester"), !!sym("Industri og bergverksdrift"), Primærnæringer, !!sym("Tjenester ellers"), !!sym("Helse- og omsorgstjenester"), Undervisning, !!sym("Offentlig administrasjon og forsvar"), !!sym("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift"), Samferdsel, !!sym("Varehandel, hotell- og restaurantvirksomhet"), !!sym("Bygge- og anleggsvirksomhet")), names_to = "næring", values_to = "value")
+
+my_colors <- c("#999999", "#E69F00", "#56B4E9") #farger til plot
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+df21 %>% mutate("value_percent_tot" = (value*100)/ !!sym("Totalt for næringer")) %>%
+  filter(statistikkvariabel != "Årsverk, heltidsekvivalenter, for lønnstakere og selvstendige (1 000 årsverk)" & statistikkvariabel != "Utførte timeverk. Lønnstakere og selvstendige (mill. timeverk)") %>% #to første linjer fjerner uønskede var
+  ggplot(aes(fill=statistikkvariabel, y=value_percent_tot, x=næring)) +  #def akser
+    geom_bar(position="dodge", stat="identity") + #barplot
+    scale_fill_manual(values=my_colors, labels=c("Bruttoprodukt", "Produksjon", "Sysselsetting"))+ #labels var
+    theme_minimal() + #theme
+    theme(axis.text.x=element_text(angle=45,hjust=1, size=5)) + #skrå text nederst
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20)) + #funksjon for skrå tekst over to linjer
+    labs(y= "Prosent av total (%)", x = "", fill=" ", title="Figur 1: Årsverk, Bruttoprodukt og Sysselsetting", subtitle = "                i de ulike næringene (2021)", caption="Kilde: SSB (2022)")  +#tittler for akser
+  theme(legend.position="bottom", legend.text = element_text(size=6))
+  
+```
+
+Figur 1 viser hvor stor andel av sysselsetning, bruttoprodukt og produksjon som kommer fra de ulike næringene. Ser vi på for eksempel oljeindustrien, ser vi et høyt bruttoprodukt, men en lav sysselsetting. Denne industrien er realkapital-intensiv, som vil si et høyt bruk av realkapital (i form av oljeplattformer, infrastruktur, osv.), og mindre bruk av arbeidskraft. Ser videre på eksempelvis helsesektoren ser vi et annet bilde. Her regnes bruttoprodukt utifra kostnadene, da det er vanskelig å fastslå markedsverdi for disse tjenestene. I denne sektoren ser vi at ca. 20 prosent av alle sysselsatte i landet jobber, mens ca. 10 prosent av bruttoprodukt blir skapt i denne sektoren.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+df21e <- rbind(bruttoprodukt, sysselsatte) %>% 
+  pivot_longer(c(!!sym("Utvinning av råolje og naturgass, inkl. tjenester"), !!sym("Industri og bergverksdrift"), Primærnæringer, !!sym("Tjenester ellers"), !!sym("Helse- og omsorgstjenester"), Undervisning, !!sym("Offentlig administrasjon og forsvar"), !!sym("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift"), Samferdsel, !!sym("Varehandel, hotell- og restaurantvirksomhet"), !!sym("Bygge- og anleggsvirksomhet"), !!sym("Totalt for næringer"), !!sym("Fastlands-Norge")), names_to = "næring", values_to = "value") %>%
+  pivot_wider(names_from = statistikkvariabel, values_from = value) %>%
+  mutate("Bruttoprodukt (1000) per sysselsatt" = !!sym("Bruttoprodukt i basisverdi. Løpende priser (mill. kr)")/ !!sym("Sysselsatte personer. Lønnstakere og selvstendige (1 000 personer)"))
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+df21e %>%
+  filter(næring != "Totalt for næringer" & næring != "Fastlands-Norge") %>%
+ggplot(aes(x=næring, y= !!sym("Bruttoprodukt (1000) per sysselsatt"), fill=næring)) +
+ geom_bar(position="dodge", stat="identity") +
+ geom_hline(yintercept=1338.0345, linetype="dashed", color = "red", alpha=0.3) + #tallet kommer fra datasettet (aka 1338)
+  theme_minimal()+
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_text(angle=45,hjust=1, size=5),
+        axis.text.y=element_text(size=10),
+        axis.title.y = element_text(size = 8)) + #skrå text nederst
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20)) + #funksjon for skrå tekst over to linjer
+  labs(y= "Bruttoprodukt per sysselsatt (1000 NOK)", x = "", title="Figur 2: Bruttoprodukt per sysselsatt", subtitle = "                i de ulike næringene (2021)", caption="Rød stiplet linje markerer gjennomsnitt for Norge.
+       Kilde: SSB (2022)") + #tittler for akser
+  scale_fill_brewer(palette="Set3") 
+```
+
+På figur 2 ser vi bruttoprodukt per sysselsatt i de ulike næringene. Bruttoprodukt per sysselsatt blir gjerne ofte brukt som et mål på produktivitet, men har sine begrensninger, noe vi kommer tilbake til. I figur 2 ser vi igjen at oljesektoren skiller seg ut, av samme grunn som nevnt tidligere. Gjennomsnittet blir gjerne dratt opp av petroleumsvirksomheten, som vi så på figur en utgjør ca. 25 prosent av totalt bruttoprodukt. Vi ser også at finanssektoren ligger over gjennomsnittet på bruttoprodukt per sysselsatt, som forteller oss at denne næringen har en høyere verdiskapning per sysselsatt enn andre.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+df21e %>%
+  filter(næring != "Totalt for næringer" & næring != "Fastlands-Norge" & næring != "Utvinning av råolje og naturgass, inkl. tjenester") %>%
+ggplot(aes(x=næring, y= !!sym("Bruttoprodukt (1000) per sysselsatt"), fill=næring)) +
+ geom_bar(position="dodge", stat="identity") +
+ geom_hline(yintercept=1027, linetype="dashed", color = "red", alpha=0.3) + #tall fra datasettet
+  theme_minimal()+
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_text(angle=45,hjust=1, size=5),
+        axis.text.y=element_text(size=10),
+        axis.title.y = element_text(size = 8)) + #skrå text nederst
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20)) + #funksjon for skrå tekst over to linjer
+  labs(y= "Bruttoprodukt per sysselsatt (1000 NOK)", x = "", title="Figur 3: Bruttoprodukt per sysselsatt", subtitle = "                i de ulike næringene, utenom petroleumsnæringen (2021)", caption="Rød stiplet linje markerer gjennomsnitt for Fastlands-Norge.
+       Kilde: SSB (2022)") + #tittler for akser
+  scale_fill_brewer(palette="Set3") 
+```
+
+Ser vi bort i fra petroleumsnæringen og sammenligner de ulike sektorene med Fastlands-Norge, får vi et litt annet bilde. Figur 3 illustrerer dette. Flere sektorer ligger over gjennomsnitt for Fastlands-Norge, blant annet Industri, Offentlig administrasjon og forsvar. Vi skal se litt nærmere på i oppgave to hvorfor bruttoprodukt per sysselsatt ikke alltid vil være et optimalt mål på produktivitet i offentlig sektor.
+
+## Oppgave 2
+
+Formålet med bruttoprodukt er å måle verdiskapning i et land. I flere offentlige tjenester måles ikke bruttoprodukt ut fra markedsverdi, da det vanskelig å fastslå denne. Her vil kostnadene til disse tjenestene utgjøre bruttoproduktet. Eksempler på offentlige tjenester som regnes på denne måten er politi, skole, helsetjenester, osv. Bruttoprodukt per sysselsatt er et mål på verdiskapingen per sysselsatt, gjerne brukt som et produktivitetsmål. Fordelen ved bruk av dette målet er at vi kan sammenligne produktiviteten til de ulike næringene i landet, samtidig som man kan sammenligne med andre land. Ulempen er at bruttoprodukt fra offentlig sektor beregnes på en annen måte, dermed kan det være lurt å sammenligne med andre produktivitetsmål. Eksempler på andre mål er produksjon per sysselsatt, kostnad per enhet og tidsbruk per enhet.
+
+## Oppgave 3
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+query_11_21 <- '{
+  "query": [
+    {
+      "code": "NACE",
+      "selection": {
+        "filter": "vs:NRNaeringPubAgg",
+        "values": [
+          "nr23_6",
+          "pub2X01_02",
+          "pub2X03",
+          "pub2X05",
+          "nr2X06_09",
+          "nr23ind",
+          "pub2X35",
+          "pub2X36_39",
+          "pub2X41_43",
+          "pub2X45_47",
+          "pub2X49B",
+          "pub2X50A",
+          "pub2X49A_52",
+          "pub2X53",
+          "pub2X55_56",
+          "pub2X58_63",
+          "pub2X64_66",
+          "pub2X68A",
+          "pub2X68B",
+          "pub2X69_75",
+          "pub2X77_82",
+          "pub2X84",
+          "pub2X85",
+          "pub2X86_88",
+          "pub2X90_97"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "BNPB",
+          "BNPB2"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+} '
+
+hent_indeks_11_21.tmp <- url_11_21 %>%
+  POST(body = query_11_21, encode = "json")
+
+df11_21 <-  hent_indeks_11_21.tmp %>% #lager datasett
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+
+df11_21 <- df11_21 %>% pivot_wider(names_from = næring, values_from = value) %>% #legger sammen enkelte næringer og velger de ønskede kolonnene
+  mutate("Industri og bergverksdrift" = Bergverksdrift + Industri) %>%
+  mutate("Primærnæringer" = !!sym("Fiske, fangst og akvakultur") + !!sym("Jordbruk og skogbruk")) %>%
+  mutate("Tjenester ellers" = !!sym("Informasjon og kommunikasjon") + !!sym("Kultur, underholdning og annen tjenesteyting")) %>%
+  mutate("Undervisning" = Undervisning + !!sym("Faglig, vitenskapelig og teknisk tjenesteyting")) %>%
+  mutate("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift" = !!sym("Elektrisitets-, gass- og varmtvannsforsyning") + !!sym("Vannforsyning, avløp og renovasjon") + !!sym("Finansierings- og forsikringsvirksomhet") + !!sym("Omsetning og drift av fast eiendom") + !!sym("Boligtjenester, egen bolig") + !!sym("Forretningsmessig tjenesteyting")) %>%
+  mutate("Samferdsel" = Rørtransport + !!sym("Utenriks sjøfart") + !!sym("Transport utenom utenriks sjøfart") + !!sym("Post og distribusjonsvirksomhet")) %>%
+  mutate("Varehandel, hotell- og restaurantvirksomhet" = !!sym("Overnattings- og serveringsvirksomhet") + !!sym("Varehandel og reparasjon av motorvogner")) %>%
+  select(!!sym("Utvinning av råolje og naturgass, inkl. tjenester"), !!sym("Industri og bergverksdrift"), !!sym("Primærnæringer"), !!sym("Tjenester ellers"), !!sym("Helse- og omsorgstjenester"), Undervisning, !!sym("Offentlig administrasjon og forsvar"), !!sym("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift"), Samferdsel, !!sym("Varehandel, hotell- og restaurantvirksomhet"), !!sym("Bygge- og anleggsvirksomhet"), statistikkvariabel, !!sym("Totalt for næringer"),år) %>%
+  pivot_longer(c(!!sym("Utvinning av råolje og naturgass, inkl. tjenester"), !!sym("Industri og bergverksdrift"), Primærnæringer, !!sym("Tjenester ellers"), !!sym("Helse- og omsorgstjenester"), Undervisning, !!sym("Offentlig administrasjon og forsvar"), !!sym("Finansiell og forretningsmessig tjenesteyting, eiendomsdrift"), Samferdsel, !!sym("Varehandel, hotell- og restaurantvirksomhet"), !!sym("Bygge- og anleggsvirksomhet"), !!sym("Totalt for næringer")), names_to = "næring", values_to = "value")
+
+facet_names <- c(
+  "Bruttoprodukt i basisverdi. Løpende priser (mill. kr)" = "Løpende priser",
+  "Bruttoprodukt i basisverdi. Faste 2015-priser (mill. kr)" = "Faste 2015-priser")
+
+df11_21 %>%
+  filter(næring != "Totalt for næringer") %>%
+  ggplot(aes(x=as.numeric(år), y= as.numeric(value), color=næring)) +
+  geom_line() +
+  theme_minimal()+
+  facet_wrap(~ statistikkvariabel, labeller = as_labeller(facet_names))+
+  labs(title= "Figur 4: Bruttoprodukt fordelt på næringer", subtitle = "                i perioden 2011-2021", caption = "Kilde: SSB (2022)", y="Bruttoprodukt (mill. kroner)", x = "", color="") +
+  theme(legend.text = element_text(size=4))+
+  scale_fill_brewer(palette="Paired")
+```
+
+Figur 4 viser bruttoprodukt i de ulike næringene fra 2011 til 2021. Vi ser bruttoproduktet i både faste 2015-priser og løpende priser. Vi ser en generell brattere graf i løpende priser, da prisstigning bidrar til løft i bruttoprodukt. Ser vi på figuren for faste 2015 priser, ser vi en figur med lavere vekst. Her er prisene faste, og økningen i bruttoprodukt skyldes bare økt produksjonsvolum.
+
+Spesielt en næring skiller seg meget ut i Norge, og det er petroleumsindustrien. Etterspørselen av olje varierer utifra konjunkturer, fremtidsutsikter, produksjon, forbruk osv. Perioder med lavere økonomisk aktivitet vil medføre at oljeprisen faller, grunnet lavere etterspørsel. Dette er grunnen til at vi ser store svingninger i bruttoprodukt fra denne næringen i løpende priser. Ser vi på faste 2015-priser, ser vi mindre svingninger da produksjonsvolum har holdt seg en gjennomsnittlig svak økning.
+
+## Oppgave 4
+
+Bruttonasjonalprodukt omfatter alle varer og tjenester som produseres i Norge minus produktinnsatsene til disse. Vi bruker ofte et annet mål på BNP, kalt FN-BNP (BNP Fastlands-Norge). BNP Fastlands-Norge er det samme som i BNP, for utenom olje- og gassindustrien, rørtransport og utenriks sjøfart. (SSB, 2021).
+
+Vi ser ofte på Fastlands-BNP i stedet for BNP for å få en bedre indikator på den økonomiske utviklingen i landet. Som vi så på figur 4 fra tidligere, så vi at bruttoprodukt fra petroleumsnæringen svinger mye, og vil dermed påvirke den totale BNPen. I BNP Fastlands-Norge utelukker vi denne næringen, og får gjerne et bedre bilde på den økonomiske utviklingen.
+
+## Litteraturliste
+
+Statistisk sentralbyrå. (2022, 18. November). *09171: Produksjon og inntekt, etter næring. Ujustert og sesongjustert 1978K1 - 2022K3.* SSB. https://data.ssb.no/api/v0/no/table/09171/
+
+Statistisk sentralbyrå. (2022, 18. November). *09175: Lønn og sysselsetting, etter næring. Ujustert og sesongjustert 1995K1 - 2022K3* SSB. https://data.ssb.no/api/v0/no/table/09175/
+
+Statistisk sentralbyrå. (2022, 18. November). *09170: Produksjon og inntekt, etter statistikkvariabel, næring og år* https://data.ssb.no/api/v0/no/table/09170/
+
+Statistisk sentralbyrå. (2021, 5. November). *Hva er egentlig BNP?* https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/statistikk/nasjonalregnskap/artikler/hva-er-egentlig-bnp
+
+\
