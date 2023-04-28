@@ -1,0 +1,145 @@
+---
+title: Mappeoppgave 2 SOK-1016 Vår 2023
+author: Kandidat 7 & 33
+date: April 2023
+execute:
+  echo: false
+  warning: false
+format:
+  pdf:
+    code-fold: true
+jupyter: python3
+---
+
+# Oppgave 1
+Vi skal i denne oppgaven ta for oss IS-RR-PK modellen. En IS-RR-PK-modell er en makroøkonomisk modell som forteller noe om aktivitetsnivået i en økonomi med inflasjonsmål. Denne modellen består av følgende tre kurver:
+
+1.	IS-Kurven som viser en sammenheng mellom renter og nasjonalprodukt, som gir likevekt i både kapitalmarkedet og i pengemarkedet. 
+
+2.	RR-Kurven som viser til sentralbankens rentesetting ved inflasjonsmål.
+
+3.	PK-Kurven som viser sammenhengen mellom arbeidsledighet og lønnsvekst og inflasjon.
+
+
+Modellen vi skal se litt nærmere på er følgende forenklede IS - RR - PK modell:
+
+(1) $y - y_{n} = z - \alpha(i - \pi_{e})$
+
+(2) $i = \phi_{y}(y - y_{n}) + \phi_{\pi}(\pi - \pi^*)$
+
+(3) $\pi = \pi_{e} + \beta(y - y_{n})$
+
+### Oppgave 1a
+
+Parameteren $\alpha$ viser hvordan produksjonsgapet $y - y_{n}$ negativt påvirkes av realrenten. Realrenten er nominell rente $i$ minus forventet inflasjon $\pi_{e}$. Det vil si, hvor stort produksjonsgapet blir negativt påvirket av renten fastslått av Norges Bank minus forventet prisstigning.
+
+Denne parameteren kommer fra to ulike parametre fra IS-ligningen fra en mer utvidet modell. $\alpha$ kommer fra parameterne $c_{2}$ og $b_{2}$ fra følgende likninger:
+
+(2) $C = Z_{C} + c_{1}(Y-T) - c_{2}(i-\pi_{e})$
+
+(3) $I = Z_{I} + b_{1}Y - b_{2}(i-\pi_{e})$
+
+Det vil si at grunnet for at produksjonsgapet vil bli negativt påvirket av en økt realrente, er at konsumet og investeringer vil gå ned som følge av dette, som videre fører til lavere produksjon, og dermed større gap mellom produksjon og potensiell produksjon.
+
+Verdien på $\alpha$ blir bestemt på følgende måte:
+
+$\frac{\Delta Y}{\Delta i} = -\alpha$
+
+Dette forteller oss at $\alpha$ blir bestemt av hvordan en endring i nominell rente $i$ påvirker produksjon $y$ negativt.
+
+### Oppgave 1b
+
+I vår forenklede modell vil en økning i $\Delta \pi_{e}$ medføre følgende:
+
+I IS-kurven vil vi få følgende effekt:
+
+$\Delta y^{skift} = \alpha \Delta \pi_{e} > 0 \rightarrow \Delta y^{skift} > 0$, som vil si at produksjonen øker som følge av en økt inflasjonsforventning. Dette grunnet at en økt inflasjonsforventning medfører lavere realrente, som igjen øker konsum- og investersetterspørselen. Dermed får IS-kurven ett høyreskift.
+
+I Philips-kurven vil vi få følgende effekt: 
+
+$\Delta \pi^{skift} = \Delta \pi_{e} > 0 \rightarrow \Delta \pi^{skift} > 0$, som vil si at inflasjonen vil bli høyere som følge av en økt inflasjonsforventning. Grunnen til at inflasjonen øker er at høyere inflasjonsforventning vil føre til høyere lønnsvekst, som igjen driver inflasjonen oppover. Dermed ser vi på figuren nedenfor at PK-kurven skifter oppover.
+
+Ser vi på RR-kurven, så vil vi se følgende effekt:
+
+$\Delta i^{skift} = \phi_{\pi} \Delta \pi > 0 \rightarrow \Delta i^{skift} > 0$, som vil si at den nominelle renten vil øke grunnet økt inflasjon. Dette grunnet at sentralbankene vil motvirke inflasjonen som har økt grunnet den høyere forventede inflasjonen. Dermed får RR-kurven ett skift oppover.
+
+
+Figuren nedenfor illustrerer denne økningen. 
+
+```{python}
+#pakker
+from matplotlib import pyplot as plt
+import numpy as np
+
+#random number 1-10
+x_num = np.linspace(1, 10, 1000)
+
+#skaper akse
+fig, axs = plt.subplots(2,1, sharex=True, figsize=(5,10))
+
+#fig 1
+axs[0].set_ylabel('i', loc='top', rotation=0) #axis titles
+axs[0].set_xlabel('Y', loc='right')
+axs[0].plot(x_num, 7.1-x_num, color="#ff7f50", label="IS")
+axs[0].plot(x_num, 9-x_num, color="#ff7f50", label="IS*", linestyle="dashed")
+axs[0].plot(x_num, 0.85*x_num, color="#40e0d0", label="RR")
+axs[0].plot(x_num, 2.2+0.85*x_num, color="#40e0d0", label="RR*", linestyle="dashed")
+
+#fig 2
+axs[1].set_ylabel('$\pi$', loc='top', rotation=0) #axis titles
+axs[1].set_xlabel('Y', loc='right')
+axs[1].plot(x_num, 0.85*x_num, color="#808080", label="PK")
+axs[1].plot(x_num, 2+0.85*x_num, color="#808080", label="PK*", linestyle="dashed")
+
+#for begge akser
+for i in range(2):
+    axs[i].set(xlim=(0,10),ylim=(0,10))
+    axs[i].spines['top'].set_color('none')
+    axs[i].spines['right'].set_color('none')
+    axs[i].tick_params(labelbottom=True)
+    axs[i].legend(loc='best')
+    axs[i].xaxis.set_tick_params(labelbottom=False)
+    axs[i].yaxis.set_tick_params(labelleft=False)
+
+#arrows
+axs[0].arrow(x=6, y=5.5, dx=0, dy=1, width=.08, color="#40e0d0")
+axs[0].arrow(x=6, y=1.4, dx=1, dy=0, width=.08, color="#ff7f50")
+axs[1].arrow(x=6, y=5.5, dx=0, dy=1, width=.08, color="#808080")
+
+#show
+plt.show()
+```
+
+I figuren ser vi at $\Delta i > 0$, dermed kan man fastslå at den nominelle renten vil øke grunnet denne. Videre kan man se at $\Delta \pi > 0$, altså at inflasjonen øker. Fortegnet til $\Delta y$ vil variere utifra parameterne. 
+
+# Oppgave 2
+
+Først setter vi inn $\pi_{t-1}$ for $\pi_{e}$, da vi antar at inflasjonsforventningene våre er inflasjonen fra forrige periode. Da får vi:
+
+$\pi_{t} = \pi_{t-1} + \beta (y_{t} - y_{n})$
+
+
+Det første man kan se er at inflasjonen over tid øker med $\beta$ multiplisert med produksjonsgapet. Produksjonsgapet er produksjon minus forventet produksjon. Vi kan anta at det første leddet for $\pi_{t-1} = 0$. Da får vi følgende uendelig rekke som illustrerer inflasjonen for en gitt periode:
+
+$\pi_{1} = \beta (y_{1} - y_{n})$, $\pi_{2} = \beta (y_{1} - y_{n}) + \beta (y_{2} - y_{n})$, $\pi_{t} = \beta (y_{1} - y_{n}) + \beta (y_{2} - y_{n}) + ... + \beta (y_{t} - y_{n})$. 
+
+Rekken skrives slik:
+
+$\pi_{t} = \sum_{s = 0}^{t} \beta (y_{s} - y_{n})$
+
+Dersom man kjørte en ekspansiv økonomisk politikk med mål om å holde en positivt produksjonsgap over tid, ville inflasjonen steget i alle periodene i følge den rekursive ligningen for adaptive inflasjonsforventninger. 
+
+Adaptive forveninger tar ikke hensyn til andre faktorer som kan påvirke, som eksempelvis økonomisk politikk eller andre hendelser i markedet som kan påvirke folks forventninger og atferd. Utifra dette kan man si at adaptive forventninger alene og i lengden kan være en unøyaktiv måte å måle infasjon på. 
+
+# Oppgave 3
+
+Ifølge resultatene fra Norges Banks forventningsundersøkelse har inflasjonsforventningene økt siden 2019. Norges Bank økte sin prognose for inflasjon i 2023 fra 2,4 prosent til 2,9 prosent. Det indikerer at de forventer høyere prisvekst i tiden som kommer. 
+
+Forbrukere har etter første kvartal i 2023 en forventet økning i inflasjon på 3.1 prosent, sammenlignet med 2019 der den forventet økningen var på 2,6 prosent. Det er en klar indikasjon på at forbrukerne følger med og endrer sine forventninger i tråd med økningen i prisvekst. 
+
+Næringslivsledere har økte kostnader på kort sikt. Økte priser på råvarer, lønninger og produksjonsutstyr påvirker inflasjonsforventningene til næringslivslederne, som forventer at prisene vil forsette å stige fremover.
+
+Økonomer har også justert sine forventninger i tråd med den økte prisveksten. 
+
+I sum viser resultatene at prisveksten fra 2019 har blitt latt merke til og også den den forventete framtidige inflasjonen har økt. Forventningsundersøkelsen er viktig for sentralbankene da inflasjonsforventningene påvirker den økonomiske aktiviteten og sentralbankenes renteavgjørelser. 
+
