@@ -1,0 +1,344 @@
+---
+title: Prosjektoppgave SOK-1016 Vår 2023
+author: Kandidat 7 og 33
+date: Mai 2023
+execute:
+  echo: false
+  warning: false
+format:
+  pdf:
+    code-fold: true
+---
+
+# Oppgave 1 - Obligasjoner og Silicon Valley Bank
+
+### 1a. Hva er en obligasjon?
+
+En obligasjon er et verdipapir som kan likestilles med lån. Stater, kommuner og selskaper utsteder slike obligasjoner for å finansiere ulike formål. Investoren i obligasjoner får tilbake pengene sine gjennom tilbakebetalinger med renter (premie). (Nordnet, 2023) Renten på obligasjonslånet vil variere utifra markedsrenten på tidspunktet obligasjonen blir utstedt.
+
+Kursen eller verdien på obligasjonen vil variere utifra markedsrenten. For eksempel har vi en obligasjon med ett år igjen og pålydende tilbakebetaling på 100 kr. Da vil verdien av obligasjonen bli bestemt følgende:
+
+$V = \frac{100}{1+i}$
+
+,hvor $V$ er kursen og $i$ er renten. Da vil verdien $V$ av obligasjonen falle dersom renten $i$ øker. Og motsatt, vil verdien $V$ øke dersom renten $i$ faller. (Holden, 2016, s. 322-323).
+
+### 1b. Silicon Valley Bank
+
+Silicon Valley Bank var en amerikansk nisjebank hvor kundene i hovedsak var oppstartsbedrifter og tech-selskaper. Banken gikk over ende 10. mars 2023, da den ble tatt over av amerikanske myndigheter. I løpet av Corona-pandemien tjente kundene til SVB en del penger, som ble satt inn i banken. Dermed hadde banken mye innskudd og lite utlån, og derfor valgte banken å plassere kundenes penger i langsiktige statsobligasjoner.
+
+I løpet av 2022 begynte kunder av banken å trenge sine innskudd grunnet høyere priser og mindre omsetning. Kundene trakk innskuddene sine ut av banken, noe som medførte at banken måtte selge sine langsiktige statsobligasjoner med tap. Disse hadde tapt seg i verdi grunnet de økte rentene, slik vi så i oppgave 1a. Da nyheten kom frem i lyset, begynte enda flere kunder å ta ut innskuddene sine fra banken.
+
+Til slutt kunne ikke banken betale ut innskudd da midlene var tapt grunnet at de måtte selge statsobligasjoner i en periode med stigende rente og tidligere enn ønsket, og dermed tapte store deler av innskuddene. Dette førte til at banken 10. mars 2023 ble tatt over av amerikanske myndigheter og satt under administrasjon. (E24, 2023).
+
+# Oppgave 2 - Drivkrefter for kronen
+
+**I-44:** Norges Bank bruker I-44 som en nominell effektiv valutakursindeks, hvor denne er beregnet på grunnlag av kursene på norske kroner mot valutaene for landets viktigste handelspartnere. I-44 er et vektet geometrisk gjennomsnitt av kursene til valutaen fra 44 ulike land. Vektene vil variere fra år til år, og blir beregnet på grunnlag av SSBs statistikk for Norges import fra de 44 landene Norge importerer mest verdimessig fra. (Norges Bank, 2023).
+
+**Rentedifferanse:** I følge renteparitetsteorien vil nominell valutakurs endre seg følgende:
+
+$E=\frac{E^e}{1+ i - i^f}$
+
+, hvor $E$ er nominell valutakurs, $E^e$ er forventet nominell valutakurs, $i$ er nominell rente og $i^f$ er nominell rente i en annen valuta.
+
+Dersom styringsrenten hos våre handelspartnere stiger raskere enn i Norge, vil rentedifferansen $i-i^f$ reduseres. Dette vil medføre en økning i $E$, som vil si at kronen blir svakere. (Holden, 2016, s. 369-370).
+
+**Risikopremie:** Dersom usikkerheten øker i finansmarkedene, slik som nå grunnet Ukraina-krigen og bankuroen, vil investorer være mer forsiktige og kreve høyere avkastning for å investere i et lands valuta. Dette medfører en høyere risikopremie på norske kroner, og der igjen en svakere kronekurs. (Norges Bank, 2023).
+
+**Oljepris:** Store deler av Norges eksport består av olje, noe som medfører at landets valuta kan bli berørt som følge av oljepris. Dersom oljeprisen faller, vil etterspørselen fra oljeselskapene etter norske kroner falle. Dette grunnet lavere inntekter og dermed mindre behov for norske kroner med tanke på skatt.
+
+Disse markedsmekanismene virker ikke uavhengig av hverandre, og er ofte med å forsterke hverandre. Økonomiske forhold og politiske hendelser både nasjonalt og internasjonalt kan påvirke disse mekanismene og dermed også kronekursen.
+
+![](figurer/drivkrefter_kronen.png)
+
+**I-44 mot 12-månders swaprentedifferanse:** Den forventete rentedifferansen mot handelspartnerne våre har blitt mindre de siste årene (venstre panel). Styringsrentene hos våre handelspartnere har vokst raskere enn i Norge. Markedsprisingen anslo et mindre fall i rentedifferansen enn det som kom, og har sannsynligvis bidratt til at kronen er svekket.
+
+**I-44 mot S&P 500:** Frykt i markedet som en følge av usikre tider, krig, høy inflasjon og problemer i banker har bidratt til usikkerhet i aksjemarkedet. Vi har per dags dato ingen konkret måte å fange en slik risikopremie opp, men den økte usikkerheten i markedet har bidratt til at det internasjonale aksjemarkedet har falt (midte panel). Aksjeindeksen og den norske kronekursen har vært relativt lik de siste årene.
+
+**I-44 mot Oljepris:** Det har historisk vært en klar sammenheng mellom utviklingen av oljeprisen og kronekursen (høyre panel).
+
+Figurene viser både korrelasjoner og sammenhengen i mellom oljepriser, aksjekurser og renteforskjeller i forhold til kronekursen. Når man diskuterer årsaksammenhenger basert på figurer alene, som oppgaven ber om er det viktig å ta hensyn til at korrelasjon ikke alltid betyr at det er kausalitet. Det vil alltid være underliggende årsaker og flere faktorer som påvirker kronekursen både positivt og negativt, derfor er det viktig at det tas grundige analyser for og kunne fastslå med sikkerhet at det er en årsaksammenheng. Det som midlertidig er sikkert er at rentedifferansen, oljeprisen og risikopremien er med på å bevege kronekursen, både på godt og vondt.
+
+# Oppgave 3 - Utviklingen i norsk økonomi
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#rydder opp fra tidligere
+rm(list=ls()) 
+
+#laster inn eventuelle pakker
+library(tidyverse) #datamanioulering og ggplot
+library(ggthemes) #tema ggplot
+library(ggpubr) #ggplot ekstra
+library(janitor) #pakke for å hjelpe med dataset
+library(httr) #pakke til innlasting av api data fra ssb
+library(rjstat) #pakke til lesing av json
+library(gridExtra) #pakke til å kombinere plots
+```
+
+Vi vil nå se på utviklingen i norsk økonomi, både før og etter den pengepolitiske rapporten fra Norges bank ble publisert. Vi tar for oss I-44, KPI endringer, arbeidsledigheten i Norge, IS-RR-PK modellen og det reviderte statsbudsjettet. Til slutt vil vi gi vår konklusjon på hvordan styringsrenten vil utvikle seg i forhold til det som opprinnelig ble anslått.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#leser kronekursdata csv
+df_kronekurs <- read.csv("https://data.norges-bank.no/api/data/EXR/B.I44.NOK.SP?apisrc=qb&format=csv&startPeriod=2020-01-01&endPeriod=2023-05-11&locale=en", sep=";") #(Norges Bank, 2023)
+
+#as date
+df_kronekurs$TIME_PERIOD <- as.Date(df_kronekurs$TIME_PERIOD)
+
+df_kronekurs %>% ggplot(aes(x=TIME_PERIOD, y=OBS_VALUE)) +
+  geom_line() + 
+  labs(title="I-44 importveid valutakursindeks", x="Tid", y="") +
+  scale_y_reverse()+
+  theme_minimal()
+```
+
+Figuren viser den importveide valutakursindeksen (I-44). Her ser vi hvordan kronekursen har forandret seg de siste årene. Det siste året har det vært en klar trend nedover, og har falt ytterligere etter at den pengepolitiske rapporten ble publisert. Det betyr at kronekursen svekkes mer og behovet for en enda høyere rente kan bli nødvendig for å få inflasjon ned mot målet.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#Data for KPI endring fra 2017-2023
+url_kpi <- "https://data.ssb.no/api/v0/no/table/03013/" #(SSB, 2023)
+
+query_kpi <- '{
+  "query": [
+    {
+      "code": "Konsumgrp",
+      "selection": {
+        "filter": "vs:CoiCop2016niva1",
+        "values": [
+          "TOTAL"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Tolvmanedersendring"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2017M01",
+          "2017M02",
+          "2017M03",
+          "2017M04",
+          "2017M05",
+          "2017M06",
+          "2017M07",
+          "2017M08",
+          "2017M09",
+          "2017M10",
+          "2017M11",
+          "2017M12",
+          "2018M01",
+          "2018M02",
+          "2018M03",
+          "2018M04",
+          "2018M05",
+          "2018M06",
+          "2018M07",
+          "2018M08",
+          "2018M09",
+          "2018M10",
+          "2018M11",
+          "2018M12",
+          "2019M01",
+          "2019M02",
+          "2019M03",
+          "2019M04",
+          "2019M05",
+          "2019M06",
+          "2019M07",
+          "2019M08",
+          "2019M09",
+          "2019M10",
+          "2019M11",
+          "2019M12",
+          "2020M01",
+          "2020M02",
+          "2020M03",
+          "2020M04",
+          "2020M05",
+          "2020M06",
+          "2020M07",
+          "2020M08",
+          "2020M09",
+          "2020M10",
+          "2020M11",
+          "2020M12",
+          "2021M01",
+          "2021M02",
+          "2021M03",
+          "2021M04",
+          "2021M05",
+          "2021M06",
+          "2021M07",
+          "2021M08",
+          "2021M09",
+          "2021M10",
+          "2021M11",
+          "2021M12",
+          "2022M01",
+          "2022M02",
+          "2022M03",
+          "2022M04",
+          "2022M05",
+          "2022M06",
+          "2022M07",
+          "2022M08",
+          "2022M09",
+          "2022M10",
+          "2022M11",
+          "2022M12",
+          "2023M01",
+          "2023M02",
+          "2023M03",
+          "2023M04"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks_kpi.tmp <- url_kpi %>%
+  POST(body = query_kpi, encode = "json")
+
+df_kpi <-  hent_indeks_kpi.tmp %>% 
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+
+df_kpi$Date <- as.Date(paste0(substr(df_kpi$måned, 1, 4), "-", substr(df_kpi$måned, 6, 7), "-01"), format = "%Y-%m-%d")
+
+df_kpi %>% ggplot(aes(x=Date, y=value)) +
+  geom_line() + 
+  labs(title="KPI, 12-måneders-endring", x="År", y="%") +
+  theme_minimal()
+```
+
+Figuren viser hvordan konsumprisindeksen har utviklet seg de siste årene. Inflasjonsmålet på 2 prosent er et stykke unna KPI-tallene fra SSB da disse ligger på godt over 6 prosent. Høy lønnsvekst, lav kronekurs og lav arbeidsledighet bidrar alle til at prisveksten vil holde seg oppe lenger.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+url_arbeidsledighet <- "https://data.ssb.no/api/v0/no/table/13760/"
+
+query_arbeidsledighet <- '{
+  "query": [
+    {
+      "code": "Justering",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "T"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "ArbledProsArbstyrk"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks_arbeidsledighet.tmp <- url_arbeidsledighet %>%
+  POST(body = query_arbeidsledighet, encode = "json")
+
+df_arbeidsledighet <-  hent_indeks_arbeidsledighet.tmp %>% 
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+
+df_arbeidsledighet$Date <- as.Date(paste0(substr(df_arbeidsledighet$måned, 1, 4), "-", substr(df_arbeidsledighet$måned, 6, 7), "-01"), format = "%Y-%m-%d")
+
+df_arbeidsledighet %>% filter(Date >= "2017-01-01") %>%
+  ggplot(aes(x=Date, y=value)) +
+  geom_line() + 
+  labs(title="Arbeidsledighet i Norge i prosent", x="År", y="%") +
+  theme_minimal()
+```
+
+Figuren tar for seg arbeidsledigheten i Norge, slik vi ser har det vært en god utvikling siden korona-årene hvor arbeidsledigheten har vært lav. Det har vært en liten stigning i arbeidsledige i 2023, men nivået er fremdeles lavt. Et stramt arbeidsmarked og høy sysselsetting, kombinert med høy lønnsvekst bidrar til at lønnspresset øker, noe som vil bidra til at prisveksten holder seg oppe.
+
+I nytt revidert statsbudsjett for 2023 øker Regjeringen oljepengebruken til 373 milliarder kroner, noe som tilsier en økning med 56 milliarder kroner. Ser man på IS-RR-PK-modellen:
+
+IS-Kurven (som viser hvordan BNP avhenger av samlet etterspørsel):
+
+$Y = \frac{1}{1-c_1(1-t)-b_1+a_1+a_3\frac{\beta}{Y^n}} \binom{Z^c-c_1 Z^T - c_2 (i-\pi^e)+ Z^I - b_2(i-\pi^e)}{+ G + Z^{NK} + a_2(E^e+\kappa(i^f-i) - a_3(1+\pi^e-\beta-Z^\pi))}$
+
+RR-kurven (som viser hvordan renten avhenger av BNP):
+
+$i=\frac{1}{1+d_1(1-\theta)\frac{\kappa}{E_{-1}}}(Z^i+d_1(\theta \pi^e + (1-\theta)\pi^F+Z^\pi-\pi^*) + d_1(1-\theta)\frac{E^e + \kappa i^F - E_{-1}}{E_{-1}}+ (d_2+d_1\theta\beta)\frac{Y-Y^n}{Y^n})$
+
+Philips-kurven (viser hvordan prisveksten på norske varer avhenger av BNP):
+
+$\pi=\pi^e + \beta\frac{Y-Y^n}{Y^n} + Z^e$
+
+En slik økning i offentlig etterspørsel vil føre til følgende: $\Delta Y = \frac{1}{1-c_1(1-t)-b_1+a_1+a_3\frac{\beta}{Y^n}} \Delta G > 0 \rightarrow \Delta Y > 0$, noe som medfører at IS-kurven skifter mot høyre, slik som man ser i figuren nedenfor.
+
+![](images/Skjermbilde%202023-05-12%20kl.%2014.31.34.png){width="300"}
+
+Utifra IS-RR-PK-kurvene, vil en slik økning i offentlig etterspørsel føre til følgende:
+
+1.  Høyere BNP
+2.  Høyere inflasjon
+3.  Høyere nominell rente
+
+Å øke offentlig pengebruk vil heller virke ekspansivt, og ikke kontraktivt. Det reviderte statsbudsjettet kom etter den pengepolitiske rapporten, og dermed noe ikke Norges Bank tok hensyn til på det tidspunktet. Dette kan igjen bidra til at styringsrenten må heves ytterlige enn Norges Banks prognose fra mars 2023.
+
+Den norske styringsrenten vil i løpet av sommeren øke til rundt 3,5 prosent anslås det av *Pengepolitisk rapport 1/23*. Tall fra Norges Bank viser derimot at den norske kronekursen er blitt betydelig mer svekket enn først antatt, og kan derfor være med til å bidra til at styringsrenten vil bli høyere enn tidligere anslått for å få inflasjonen ned mot målet. I tillegg har regjeringen bestemt å øke oljepengebruken i det reviderte statsbudsjettet. Utifra disse faktorene tror vi at styringsrenten må heves ytterligere enn først antatt av Norges Bank for å få ned inflasjonen.
+
+# Litteraturliste
+
+### Litteratur
+
+\[1\] Nordnet Bank AB. (2023). *Obligasjoner.* Hentet 8. mai fra https://www.nordnet.no/blogg/borsskolen/laer-om-aksjer/obligasjoner/
+
+\[2\] Holden, S. (2016). *Makroøkonomi.* (1. utgave). Cappelen Damn Akademisk.
+
+\[3\] E24. (2023). *Dette er bankkaoset.* Hentet 8. mai fra https://e24.no/internasjonal-oekonomi/i/EQBA8a/dette-er-bankkaoset
+
+\[4\] Norges Bank (2023). *I-44, Importveid kursindeks.* Hentet 9. mai fra https://www.norges-bank.no/tema/Statistikk/i44/
+
+\[5\] Norges Bank (2023). *Pengepolitisk rapport 1/2023.* Hentet 8. mai fra https://www.norges-bank.no/aktuelt/nyheter-og-hendelser/Publikasjoner/Pengepolitisk-rapport-med-vurdering-av-finansiell-stabilitet/2023/ppr-12023/nettrapport-ppr-12023/?fbclid=IwAR01HEnrj8zRkTdCV07ay_dTbMetid0ALnL73e-95jZ00b3tKFGC3PZsscw9
+
+\[6\] E24. (2023, 11. mai). *Revidert statsbudsjett kort fortalt.* Hentet 12. mai fra https://e24.no/norsk-oekonomi/i/BWqdAe/revidert-statsbudsjett-kort-fortalt
+
+### Illustrasjoner
+
+\[1\] *Figur 2.C Drivkrefter for kronen,* 2023, av Norges Bank. (https://www.norges-bank.no/contentassets/048b16fcdf674cb1ac384abada054e5a/no-638152692570806114/imagefigur_2\_bb_divkrefter_kronen_no_epub.png)
+
+### Datasett
+
+\[1\] Norges Bank. (2023). *Exchange Rates*. (https://data.norges-bank.no/api/data/EXR/B.I44.NOK.SP?apisrc=qb&format=csv&startPeriod=2022-05-11&endPeriod=2023-05-11&locale=en)
+
+\[2\] SSB. (2023). *03013: Konsumprisindeks, etter konsumgruppe (2015=100) 1979M01 - 2023M04*. (https://www.ssb.no/statbank/table/03013)
+
+\[3\] SSB. (2023). *13760: Arbeidsstyrken, sysselsatte, arbeidsledige og utførte ukeverk, etter kjønn, alder og type justering. Bruddjusterte tall 2006M01 - 2023M03*. (https://www.ssb.no/statbank/table/13760/)
